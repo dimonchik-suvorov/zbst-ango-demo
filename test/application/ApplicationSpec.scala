@@ -11,14 +11,6 @@ class ApplicationSpec extends PlaySpecification with ShouldMatchers {
 
   "With Document endpoints it" should {
 
-    "be possible to create doc" in new WithServer {
-      val ws: WSClient = app.injector.instanceOf(classOf[WSClient])
-
-      private val creationResponse: WSResponse = await(ws.url(url).post(Json.parse("""{"pattern": "hello darling"}""")))
-
-      creationResponse.status must equalTo(CREATED)
-    }
-
     "be possible to search by pattern" in new WithServer {
       val ws: WSClient = app.injector.instanceOf(classOf[WSClient])
       await(ws.url(url).post(Json.parse("""{"pattern": "hello baby"}""")))

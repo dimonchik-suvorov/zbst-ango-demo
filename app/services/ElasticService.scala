@@ -1,7 +1,6 @@
 package services
 
 import javax.inject.{Inject, Singleton}
-import model.Doc
 import play.api.http.HttpVerbs
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSClient, WSResponse}
@@ -20,9 +19,11 @@ class ElasticService @Inject()(val ws: WSClient)(implicit val ec: ExecutionConte
       .withBody(Json.parse(
         s"""
            |{
-           |    "query" : {
-           |        "term" : { "name" : "$queryPattern" }
+           |  "query": {
+           |    "multi_match" : {
+           |      "query": "$queryPattern"
            |    }
+           |  }
            |}
         """.stripMargin))
       .execute()
