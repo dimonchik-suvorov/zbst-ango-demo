@@ -1,7 +1,7 @@
 package controllers
 
 import javax.inject.{Inject, Singleton}
-import play.api.libs.json.Json
+import play.api.libs.json.{JsArray, Json}
 import play.api.mvc._
 import services.ElasticService
 
@@ -22,5 +22,11 @@ class DataController @Inject()(val cc: ControllerComponents,
 
   def schema: Action[AnyContent] = Action.async {
     elastic.getSchema.map(res => Ok(res))
+  }
+
+  def bulkUpload: Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
+    val entries = request.body.asJson.map(data => data.asInstanceOf[JsArray].value).get
+    elastic.bulkUpload(entries)
+      .map(response => Status(response.status)(Json.parse(response.body)))
   }
 }
