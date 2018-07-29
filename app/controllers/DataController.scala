@@ -19,4 +19,8 @@ class DataController @Inject()(val cc: ControllerComponents,
     elastic.search(queryPattern)
       .map(res => Ok(Json.parse(res.body)))
   }
+
+  def schema: Action[AnyContent] = Action.async {
+    elastic.getSchema.map(res => Ok(res))
+  }
 }
