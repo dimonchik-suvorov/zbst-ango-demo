@@ -1,0 +1,38 @@
+version: "3"
+networks:
+  dockernet:
+services:
+  app:
+    image: zbstof/insiders-test
+    expose:
+      - "9000"
+    ports:
+      - "9000:9000"
+    depends_on:
+      - elasticsearch
+      - mongodb
+    networks:
+      dockernet:
+        aliases:
+          - app
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.2
+    expose:
+      - "9200"
+    networks:
+      dockernet:
+        aliases:
+          - elasticsearch
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "discovery.type=single-node"
+  mongodb:
+    image: mongo
+    expose:
+      - "27017"
+    networks:
+      dockernet:
+        aliases:
+          - mongodb
+
+    
