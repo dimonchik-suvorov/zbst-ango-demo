@@ -12,11 +12,11 @@ class DataController @Inject()(val cc: ControllerComponents,
                                val elastic: ElasticService)(implicit val ec: ExecutionContext) extends AbstractController(cc) {
 
   def search: Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
-    val pattern: String = request.getQueryString("name") match {
-      case Some(name) => name
-      case None => throw new IllegalArgumentException(s"missing required query parameter 'name', got ${request.rawQueryString}")
+    val queryPattern: String = request.getQueryString("pattern") match {
+      case Some(pattern) => pattern
+      case None => throw new IllegalArgumentException(s"missing required query parameter 'pattern', got ${request.rawQueryString}")
     }
-    elastic.search(pattern)
+    elastic.search(queryPattern)
       .map(res => Ok(Json.parse(res.body)))
   }
 }

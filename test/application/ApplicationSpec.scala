@@ -14,20 +14,20 @@ class ApplicationSpec extends PlaySpecification with ShouldMatchers {
     "be possible to create doc" in new WithServer {
       val ws: WSClient = app.injector.instanceOf(classOf[WSClient])
 
-      private val creationResponse: WSResponse = await(ws.url(url).post(Json.parse("""{"name": "hello darling"}""")))
+      private val creationResponse: WSResponse = await(ws.url(url).post(Json.parse("""{"pattern": "hello darling"}""")))
 
       creationResponse.status must equalTo(CREATED)
     }
 
-    "be possible to search by name" in new WithServer {
+    "be possible to search by pattern" in new WithServer {
       val ws: WSClient = app.injector.instanceOf(classOf[WSClient])
-      await(ws.url(url).post(Json.parse("""{"name": "hello baby"}""")))
-      await(ws.url(url).post(Json.parse("""{"name": "hello darling"}""")))
+      await(ws.url(url).post(Json.parse("""{"pattern": "hello baby"}""")))
+      await(ws.url(url).post(Json.parse("""{"pattern": "hello darling"}""")))
 
-      private val searchResponse: WSResponse = await(ws.url(s"$url?name=hello").get())
+      private val searchResponse: WSResponse = await(ws.url(s"$url?pattern=hello").get())
 
       searchResponse.status must equalTo(OK)
-      Json.parse(searchResponse.body) \\ "_source" map (_ \ "name" get) must contain[JsValue](JsString("hello darling"), JsString("hello baby"))
+      Json.parse(searchResponse.body) \\ "_source" map (_ \ "pattern" get) must contain[JsValue](JsString("hello darling"), JsString("hello baby"))
     }
   }
 
