@@ -1,4 +1,2 @@
-POST /docs    controllers.DataController.create
+POST /data    controllers.DataController.create
 GET  /search  controllers.DataController.search
-
-      
