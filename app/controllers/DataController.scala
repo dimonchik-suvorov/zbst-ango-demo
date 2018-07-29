@@ -1,6 +1,9 @@
 package controllers
 
+import java.io.FileInputStream
+
 import javax.inject.{Inject, Singleton}
+import play.api.libs.Files
 import play.api.libs.json.{JsArray, Json}
 import play.api.mvc._
 import services.ElasticService
@@ -26,6 +29,18 @@ class DataController @Inject()(val cc: ControllerComponents,
 
   def bulkUpload: Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
     val entries = request.body.asJson.map(data => data.asInstanceOf[JsArray].value).get
+    elastic.bulkUpload(entries)
+      .map(response => Status(response.status)(Json.parse(response.body)))
+  }
+
+  def fileUpload: Action[MultipartFormData[Files.TemporaryFile]] = Action.async(parse.multipartFormData) { request =>
+    val stream = new FileInputStream(request.body.files.head.ref.getAbsoluteFile)
+    val json = try {
+      Json.parse(stream)
+    } finally {
+      stream.close()
+    }
+    val entries = json.asInstanceOf[JsArray].value
     elastic.bulkUpload(entries)
       .map(response => Status(response.status)(Json.parse(response.body)))
   }
