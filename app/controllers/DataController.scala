@@ -9,8 +9,8 @@ import services.ElasticService
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class DocController @Inject()(val cc: ControllerComponents,
-                              val elastic: ElasticService)(implicit val ec: ExecutionContext) extends AbstractController(cc) {
+class DataController @Inject()(val cc: ControllerComponents,
+                               val elastic: ElasticService)(implicit val ec: ExecutionContext) extends AbstractController(cc) {
 
   def create: Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
     val dto: DocDto = Json.fromJson[DocDto](request.body.asJson.get).asEither match {
