@@ -1,0 +1,34 @@
+{
+  "private": true,
+  "homepage": "https://create-react-app-redux.now.sh",
+  "scripts": {
+    "deploy": "now && now alias",
+    "start": "PORT=3666 react-scripts start",
+    "now-start": "serve -s ./build",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "precommit": "pretty-quick --staged"
+  },
+  "devDependencies": {
+    "prettier": "1.13.7",
+    "react-scripts": "1.1.4"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "connected-react-router": "4.3.0",
+    "file-upload-react": "^0.1.2",
+    "react": "16.4.1",
+    "react-autosuggest": "^9.3.4",
+    "react-bootstrap": "^0.32.1",
+    "react-dom": "16.4.1",
+    "react-redux": "5.0.7",
+    "react-router": "4.3.1",
+    "react-router-dom": "4.3.1",
+    "redux": "4.0.0",
+    "redux-thunk": "2.3.0",
+    "sanitize.css": "6.0.0",
+    "serve": "9.4.0"
+  },
+  "proxy": "http://10.51.160.209:9000/"
+}
