@@ -10,3 +10,14 @@ Repo to implement basic upload and search functionality
 
 - Run `docker run -p 9200:9200 docker.elastic.co/elasticsearch/elasticsearch:6.3.2`
 - Run play app in IDEA
+- Run to insert into ES:
+
+        curl -X POST \
+          http://localhost:9000/docs \
+          -H 'Content-Type: application/json' \
+          -d '{ "name": "foo" }'
+          
+- Run to search:
+
+        curl -X GET \
+          'http://localhost:9000/docs?name=foo'
