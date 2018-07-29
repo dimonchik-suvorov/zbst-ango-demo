@@ -18,11 +18,11 @@ class ElasticService @Inject()(val ws: WSClient)(implicit val ec: ExecutionConte
   // we are using one mapping and data type per instance of app
   private val esDocRoot: String = "http://localhost:9200/data/_doc"
 
-  def getSchema: Future[JsObject] = {
+  def getSchema: Future[JsValue] = {
     ws.url(s"$esDocRoot/_mapping")
       .withMethod(HttpVerbs.GET)
       .execute()
-      .map(res => transformMappingToSimpleSchema(res))
+      .map(transformMappingToSimpleSchema)
   }
 
   private def transformMappingToSimpleSchema(res: WSResponse) = {

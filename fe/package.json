@@ -30,5 +30,5 @@
     "sanitize.css": "6.0.0",
     "serve": "9.4.0"
   },
-  "proxy": "http://10.51.160.209:9000/"
+  "proxy": "http://localhost:9000/"
 }

@@ -25,3 +25,9 @@ Repo to implement basic upload and search functionality
           --url http://localhost:9000/upload \
           --header 'Content-Type: application/json' \
           --data '[{ "name": "foo" },{ "name": "bar" }]'
+          
+# Run front-end
+
+- `cd fe`
+- `npm i`
+- `npm run start`

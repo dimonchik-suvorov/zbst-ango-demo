@@ -20,7 +20,7 @@ class SearchTest extends PlaySpecification with ShouldMatchers {
       searchResponse.status must equalTo(OK)
       val body = searchResponse.body
       println("Response: " + body)
-      Json.parse(body) \\ "firstname" contains (JsString("Simpson"))
+      Json.parse(body) \\ "firstname" contains JsString("Simpson")
       println("OK")
     }
   }

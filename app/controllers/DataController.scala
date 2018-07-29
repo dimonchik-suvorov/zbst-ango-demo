@@ -3,8 +3,9 @@ package controllers
 import java.io.FileInputStream
 
 import javax.inject.{Inject, Singleton}
+import play.api.libs.json.{JsArray, JsValue, Json}
+import play.api.libs.ws.WSResponse
 import play.api.libs.Files
-import play.api.libs.json.{JsArray, Json}
 import play.api.mvc._
 import services.ElasticService
 
@@ -20,17 +21,21 @@ class DataController @Inject()(val cc: ControllerComponents,
       case None => throw new IllegalArgumentException(s"missing required query parameter 'pattern', got ${request.rawQueryString}")
     }
     elastic.search(queryPattern)
-      .map(res => Ok(Json.parse(res.body)))
+      .map((res: WSResponse) => Ok(Json.parse(res.body)))
   }
 
   def schema: Action[AnyContent] = Action.async {
-    elastic.getSchema.map(res => Ok(res))
+    elastic.getSchema.map((res: JsValue) => Ok(res))
   }
 
   def bulkUpload: Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
-    val entries = request.body.asJson.map(data => data.asInstanceOf[JsArray].value).get
+    val body: AnyContent = request.body
+    val entries: IndexedSeq[JsValue] = body.asJson.map((data: JsValue) => data.asInstanceOf[JsArray].value).getOrElse(
+      throw new IllegalArgumentException("Body: " + body)
+    )
+
     elastic.bulkUpload(entries)
-      .map(response => Status(response.status)(Json.parse(response.body)))
+      .map((response: WSResponse) => Status(response.status)(Json.parse(response.body)))
   }
 
   def fileUpload: Action[MultipartFormData[Files.TemporaryFile]] = Action.async(parse.multipartFormData) { request =>
