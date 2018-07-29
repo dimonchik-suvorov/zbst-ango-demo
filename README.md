@@ -18,3 +18,10 @@ Repo to implement basic upload and search functionality
 
         curl -X GET \
           'http://localhost:9000/search?pattern=Simplon'
+          
+- Run to upload:
+
+        curl --request POST \
+          --url http://localhost:9000/upload \
+          --header 'Content-Type: application/json' \
+          --data '[{ "name": "foo" },{ "name": "bar" }]'
