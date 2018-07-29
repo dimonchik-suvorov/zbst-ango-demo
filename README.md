@@ -13,11 +13,11 @@ Repo to implement basic upload and search functionality
 - Run to insert into ES:
 
         curl -X POST \
-          http://localhost:9000/docs \
+          http://localhost:9000/upload \
           -H 'Content-Type: application/json' \
           -d '{ "name": "foo" }'
           
 - Run to search:
 
         curl -X GET \
-          'http://localhost:9000/docs?name=foo'
+          'http://localhost:9000/search?pattern=foo'
