@@ -1,6 +1,5 @@
 package services
 
-import dto.DocDto
 import javax.inject.{Inject, Singleton}
 import play.api.http.HttpVerbs
 import play.api.libs.json.Json
