@@ -17,19 +17,6 @@ class ApplicationSpec extends PlaySpecification with ShouldMatchers {
       private val creationResponse: WSResponse = await(ws.url(url).post(Json.parse("""{"name": "hello darling"}""")))
 
       creationResponse.status must equalTo(CREATED)
-      value(creationResponse, "name") must equalTo(JsString("hello darling"))
-    }
-
-    "be possible to get doc by id" in new WithServer {
-      val ws: WSClient = app.injector.instanceOf(classOf[WSClient])
-      private val creationResponse: WSResponse = await(ws.url(url).post(Json.parse("""{"name": "hello darling"}""")))
-      val id: String = value(creationResponse, "id").as[JsString].value
-
-      val retrievalResponse: WSResponse = await(ws.url(s"$url/$id").get())
-
-      retrievalResponse.status must equalTo(OK)
-      value(retrievalResponse, "name") must equalTo(JsString("hello darling"))
-      value(retrievalResponse, "id") must equalTo(JsString(id))
     }
 
     "be possible to search by name" in new WithServer {
