@@ -1,2 +1,3 @@
 GET  /search  controllers.DataController.search
+POST  /upload  controllers.DataController.bulkUpload
 GET  /schema  controllers.DataController.schema
