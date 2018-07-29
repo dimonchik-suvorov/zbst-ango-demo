@@ -9,7 +9,7 @@ Repo to implement basic upload and search functionality
 # Run locally:
 
 - Run `docker run -p 9200:9200 docker.elastic.co/elasticsearch/elasticsearch:6.3.2`
-- Run play app in IDEA
+- Run play app in IDEA OR run `sbt run`
 - Run to insert into ES:
 
         curl -X POST \
