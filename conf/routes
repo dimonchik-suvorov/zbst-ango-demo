@@ -1,5 +1,4 @@
 POST    /docs                       controllers.DocController.create
-GET     /docs/:id                   controllers.DocController.get(id: String)
 GET     /docs                       controllers.DocController.search
 
       

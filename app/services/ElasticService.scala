@@ -1,5 +1,6 @@
 package services
 
+import dto.DocDto
 import javax.inject.{Inject, Singleton}
 import model.Doc
 import play.api.http.HttpVerbs
@@ -11,10 +12,10 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class ElasticService @Inject()(val ws: WSClient)(implicit val ec: ExecutionContext) {
 
-  private val esDocRoot: String = "http://elasticsearch:9200/docs/_doc"
+  private val esDocRoot: String = "http://localhost:9200/docs/_doc"
 
-  def send(enrichedWithId: Doc): Future[WSResponse] = {
-    ws.url(esDocRoot).post(Json.toJson(dto.DocDto.from(enrichedWithId)))
+  def send(enrichedWithId: DocDto): Future[WSResponse] = {
+    ws.url(esDocRoot).post(Json.toJson(enrichedWithId))
   }
 
   def search(namePattern: String): Future[WSResponse] = {
