@@ -14,7 +14,7 @@ class ElasticService @Inject()(val ws: WSClient)(implicit val ec: ExecutionConte
   // we are using one mapping and data type per instance of app
   private val esDocRoot: String = "http://localhost:9200/data/_doc"
 
-  def getSchema: Future[JsValue] = {
+  def getSchema: Future[JsObject] = {
     ws.url(s"$esDocRoot/_mapping")
       .withMethod(HttpVerbs.GET)
       .execute()
@@ -22,14 +22,13 @@ class ElasticService @Inject()(val ws: WSClient)(implicit val ec: ExecutionConte
   }
 
   private def transformMappingToSimpleSchema(res: WSResponse) = {
-    val result: Seq[JsString] = (res.body[JsValue] \ "data" \ "mappings" \ "_doc" \ "properties")
+    def getFieldType(value: JsValue): JsValue = (value \ "type").get.as[JsValue]
+
+    JsObject((res.body[JsValue] \ "data" \ "mappings" \ "_doc" \ "properties")
       .get
       .as[JsObject]
       .fields
-      .map(_._1)
-      .map(JsString)
-
-    JsArray(result)
+      .map(field => (field._1, getFieldType(field._2))))
   }
 
   def search(queryPattern: String): Future[WSResponse] = {
