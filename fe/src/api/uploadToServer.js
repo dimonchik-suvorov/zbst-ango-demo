@@ -1,7 +1,7 @@
 import axios from 'axios'
 import currentLocation from './currentLocation'
 
-const url = `${currentLocation}upload`
+const url = `${currentLocation}upload-file`
 
 const params = {
   headers: {
