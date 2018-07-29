@@ -10,18 +10,11 @@ Repo to implement basic upload and search functionality
 
 - Run `docker run -p 9200:9200 docker.elastic.co/elasticsearch/elasticsearch:6.3.2`
 - Run play app in IDEA OR run `sbt run`
-- Run to insert into ES:
+- Run to upload data into ElasticSearch (change into work dir):
 
-        curl -X POST \
-          http://localhost:9000/upload \
-          -H 'Content-Type: application/json' \
-          -d '{ "name": "foo" }'
-          
+        curl -H 'Content-Type: application/x-ndjson' -XPOST 'localhost:9200/data/_doc/_bulk' --data-binary @accounts.json
+        
 - Run to search:
 
         curl -X GET \
-          'http://localhost:9000/search?pattern=foo'
-          
-- Run to upload data into ElasticSearch:
-
-curl -H 'Content-Type: application/x-ndjson' -XPOST 'localhost:9200/data/_doc/_bulk?pretty' --data-binary @accounts.json
+          'http://localhost:9000/search?pattern=Simplon'
