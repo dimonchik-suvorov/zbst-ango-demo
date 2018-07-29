@@ -55,7 +55,7 @@ class ElasticService @Inject()(val ws: WSClient)(implicit val ec: ExecutionConte
   def bulkUpload(elements: IndexedSeq[JsValue]): Future[WSResponse] = {
     val ndjson = elements
       .map(element => Json.stringify(element))
-      .foldLeft[String]("""{ "index" : { "_index" : "data", "_type" : "_doc" } }""" + "\n")((ndjson, entry) => ndjson + entry + "\n")
+      .foldLeft[String]("")((ndjson, entry) => ndjson + """{ "index" : { "_index" : "data", "_type" : "_doc" } }""" + "\n" + entry + "\n")
     ws.url(s"$esDocRoot/_bulk")
       .withMethod(HttpVerbs.POST)
       .withHttpHeaders("Content-Type" -> "application/x-ndjson")
