@@ -21,3 +21,7 @@ Repo to implement basic upload and search functionality
 
         curl -X GET \
           'http://localhost:9000/search?pattern=foo'
+          
+- Run to upload data into ElasticSearch:
+
+curl -H 'Content-Type: application/x-ndjson' -XPOST 'localhost:9200/data/_doc/_bulk?pretty' --data-binary @accounts.json
