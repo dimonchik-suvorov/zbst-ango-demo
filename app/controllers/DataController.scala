@@ -3,9 +3,9 @@ package controllers
 import java.io.FileInputStream
 
 import javax.inject.{Inject, Singleton}
+import play.api.libs.Files
 import play.api.libs.json.{JsArray, JsValue, Json}
 import play.api.libs.ws.WSResponse
-import play.api.libs.Files
 import play.api.mvc._
 import services.ElasticService
 
@@ -28,24 +28,22 @@ class DataController @Inject()(val cc: ControllerComponents,
     elastic.getSchema.map((res: JsValue) => Ok(res))
   }
 
-  def bulkUpload: Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
-    val body: AnyContent = request.body
-    val entries: IndexedSeq[JsValue] = body.asJson.map((data: JsValue) => data.asInstanceOf[JsArray].value).getOrElse(
-      throw new IllegalArgumentException("Body: " + body)
-    )
-
-    elastic.bulkUpload(entries)
-      .map((response: WSResponse) => Status(response.status)(Json.parse(response.body)))
+  def bulkUpload: Action[JsValue] = Action.async(parse.json) { implicit request: Request[JsValue] =>
+    request.body match {
+      case JsArray(entries) => elastic.bulkUpload(entries)
+        .map((response: WSResponse) => Status(response.status)(Json.parse(response.body)))
+      case _ => throw new IllegalArgumentException("Array of Json entries is required")
+    }
   }
 
   def fileUpload: Action[MultipartFormData[Files.TemporaryFile]] = Action.async(parse.multipartFormData) { request =>
-    val stream = new FileInputStream(request.body.files.head.ref.getAbsoluteFile)
-    val json = try {
+    val stream = new FileInputStream(request.body.files.head.ref)
+    val data = try {
       Json.parse(stream)
     } finally {
       stream.close()
     }
-    val entries = json.asInstanceOf[JsArray].value
+    val entries = data.asInstanceOf[JsArray].value
     elastic.bulkUpload(entries)
       .map(response => Status(response.status)(Json.parse(response.body)))
   }
